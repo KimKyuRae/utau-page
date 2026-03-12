@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <link rel="icon" href="assets/favicon.ico" type="image/x-icon"> 
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tetsu Kokuno UTAU</title>
+    <meta
+      name="description"
+      content="단일 UTAU 보이스뱅크 배포를 위한 정적 GitHub Pages 사이트 템플릿"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+      <link
+        href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700&family=Space+Grotesk:wght@500;700&display=swap"
+        rel="stylesheet"
+      />
+    <link rel="stylesheet" href="styles.css" />
+    
+    <!-- 초기 부팅 씬(스크립트로 로딩 연출)을 위한 인라인 스타일 -->
+    <style>
+      #boot-screen {
+        position: fixed;
+        inset: 0;
+        background: #111;
+        z-index: 9999;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        color: #4a5d23; /* 올리브 그린 포인트 */
+        font-family: "Space Grotesk", monospace;
+        transition: opacity 0.8s ease, filter 0.8s ease;
+      }
+      
+      /* HUD 타겟팅 마커 (화면 네 모서리) */
+      .hud-marker {
+        position: absolute;
+        width: 3vw;
+        height: 3vw;
+        min-width: 20px;
+        min-height: 20px;
+        max-width: 60px;
+        max-height: 60px;
+        border: 4px solid #4a5d23;
+        opacity: 0;
+        animation: hud-aim 1.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      }
+      .hud-tl { top: 40px; left: 40px; border-right: none; border-bottom: none; transform-origin: top left; } /* ㄱ 모양 */
+      .hud-tr { top: 40px; right: 40px; border-left: none; border-bottom: none; transform-origin: top right; }
+      .hud-bl { bottom: 40px; left: 40px; border-right: none; border-top: none; transform-origin: bottom left; } /* ㄴ 모양 */
+      .hud-br { bottom: 40px; right: 40px; border-left: none; border-top: none; transform-origin: bottom right; }
+
+      @keyframes hud-aim {
+        0% { opacity: 0; transform: scale(3); filter: blur(5px); }
+        50% { opacity: 1; transform: scale(0.8); filter: blur(0); }
+        70% { transform: scale(1.05); }
+        100% { opacity: 0.9; transform: scale(1); }
+      }
+
+      #boot-text {
+        font-size: 1.2rem;
+        letter-spacing: 0.1em;
+        text-shadow: 0 0 8px rgba(74, 93, 35, 0.5);
+      }
+      .boot-cursor {
+        animation: blink 1s step-end infinite;
+      }
+      @keyframes blink { 50% { opacity: 0; } }
+      .fade-out {
+        opacity: 0;
+        pointer-events: none;
+        filter: blur(10px);
+      }
+    </style>
+  </head>
+  <body>
+    <!-- 부팅 스크린 -->
+    <div id="boot-screen">
+      <div class="hud-marker hud-tl"></div>
+      <div class="hud-marker hud-tr"></div>
+      <div class="hud-marker hud-bl"></div>
+      <div class="hud-marker hud-br"></div>
+      
+      <div id="boot-text">INITIALIZING... <span class="boot-cursor">_</span></div>
+    </div>
+
+    <!-- 언어 전환 스위치 (Language Switcher) -->
+    <div class="lang-switcher">
+      <button class="lang-btn active" data-lang="ko">KO</button>
+      <button class="lang-btn" data-lang="en">EN</button>
+      <button class="lang-btn" data-lang="ja">JA</button>
+    </div>
+
+    <!-- 배경 애니메이션 캔버스 (간장게장 비) -->
+    <canvas id="crab-canvas"></canvas>
+
+    <!-- Lenis(부드러운 스크롤)를 위한 래퍼 구조 적용 -->
+    <div class="page-shell">
+      <!-- 틸트/가속도 효과를 받을 대상인 메인 헤더 -->
+      <header class="hero glass-panel section-rise tilt-element">
+        <div class="hero-copy">
+          <p class="eyebrow" id="hero-label"></p>
+          <h1 id="hero-name"></h1>
+          <p class="hero-tagline" id="hero-tagline"></p>
+
+          <div class="hero-actions">
+            <a class="button button-primary" href="#profile" id="btn-profile"></a>
+            <a class="button button-secondary" id="hero-download-link" href="#credit"></a>
+          </div>
+        </div>
+
+        <div class="status-panel">
+          <p class="status-label" id="ui-status-label"></p>
+          <div class="status-value" id="profile-status"></div>
+          <ul class="status-list" id="hero-facts"></ul>
+        </div>
+      </header>
+
+      <main>
+        <section class="profile-section section-rise" id="profile">
+          <div class="section-heading">
+            <p class="eyebrow" id="ui-profile-eyebrow"></p>
+            <h2 id="ui-profile-heading"></h2>
+          </div>
+
+          <div class="profile-layout">
+            <article class="profile-card main-card glass-panel tilt-element">
+              <div class="portrait-frame" id="portrait-frame">
+                <img id="portrait-image" alt="Character Profile Image" hidden />
+                <div class="portrait-fallback" id="portrait-fallback"></div>
+              </div>
+
+              <div class="profile-copy">
+                <div class="profile-headline-row">
+                  <h3 id="profile-name"></h3>
+                  <span class="profile-chip" id="profile-type"></span>
+                </div>
+
+                <p class="profile-summary" id="profile-summary"></p>
+                <div class="tag-row" id="tag-row"></div>
+
+                <dl class="profile-grid" id="profile-grid"></dl>
+                <div class="profile-quick-actions">
+                  <a class="button button-primary" id="profile-download-link" href="#credit"></a>
+                </div>
+              </div>
+            </article>
+
+            <article class="profile-card dossier-card glass-panel tilt-element">
+              <div class="card-heading-row">
+                <h3 id="ui-dossier-title"></h3>
+                <span class="small-note" id="ui-dossier-note"></span>
+              </div>
+              <div class="dossier-list" id="dossier-list" data-lenis-prevent></div>
+            </article>
+          </div>
+        </section>
+
+        <section class="download-section section-rise" id="credit">
+          <div class="section-heading">
+            <p class="eyebrow" id="ui-download-eyebrow"></p>
+            <h2 id="credit-title"></h2>
+            <p class="download-description" id="credit-description"></p>
+            <button class="button button-secondary credit-toggle" id="ui-credit-toggle" type="button"></button>
+          </div>
+
+          <div class="credit-collapsible" id="credit-collapsible">
+            <div class="credit-grid" id="credit-grid">
+              <!-- Contributors will be injected here -->
+            </div>
+          </div>
+
+          <div class="download-layout credit-footer-layout">
+            <article class="download-card primary-download glass-panel tilt-element">
+              <p class="download-label" id="ui-drive-label"></p>
+              <h3 id="dl-title"></h3>
+              
+              <a
+                class="button button-primary button-large"
+                id="credit-link"
+                href="#"
+                target="_blank"
+                rel="noreferrer"
+              >
+              </a>
+              <a
+                class="button button-secondary button-large"
+                id="credit-link-alt"
+                href="#"
+                target="_blank"
+                rel="noreferrer"
+              >
+              </a>
+            </article>
+
+            <article class="download-card checklist-card glass-panel tilt-element">
+              <div class="card-heading-row">
+                <h3 id="ui-notes-title"></h3>
+                <span class="small-note" id="ui-notes-label"></span>
+              </div>
+              <ul class="checklist" id="credit-notes"></ul>
+            </article>
+          </div>
+        </section>
+      </main>
+
+      <footer class="footer glass-panel section-rise tilt-element">
+        <p class="footer-meta" id="footer-meta"></p>
+        <nav class="footer-nav" id="footer-nav" aria-label="Footer links"></nav>
+      </footer>
+    </div>
+
+    <!-- 외부 라이브러리: Lenis(스무스 스크롤 관성), VanillaTilt(마우스 호버 3D 가속도) -->
+    <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.29/bundled/lenis.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.1/vanilla-tilt.min.js"></script>
+    
+    <script src="content.js"></script>
+    <script src="script.js"></script>
+    
+    <!-- 애니메이션 로직 추가 -->
+    <script>
+      // 1. 초기 부팅 씬 연출 (인터페이스 로딩 느낌)
+      document.addEventListener("DOMContentLoaded", () => {
+        const bootScreen = document.getElementById("boot-screen");
+        const bootText = document.getElementById("boot-text");
+        
+        setTimeout(() => { bootText.innerHTML = "LOADING MODULES... <span class='boot-cursor'>_</span>"; }, 400);
+        setTimeout(() => { bootText.innerHTML = "SYSTEM READY. <span class='boot-cursor'>_</span>"; }, 800);
+        
+        setTimeout(() => {
+          bootScreen.classList.add("fade-out");
+          // 부팅 화면이 꺼질 때 UI가 밑에서부터 부드럽게 떠오르는 트리거
+          document.body.classList.add("boot-complete");
+        }, 1200);
+      });
+
+      // 2. Lenis 스무스 스크롤 (페이지 이동 관성/가속도 효과)
+      const lenis = new Lenis({
+        duration: 0.7, // 애니메이션 시간 조절 (관성 줄임)
+        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // 부드럽게 감속하는 easing
+        direction: 'vertical',
+        gestureDirection: 'vertical',
+        smooth: true,
+        smoothTouch: false, // 모바일에선 브라우저 기본 스크롤 사용
+        touchMultiplier: 1.5, // 터치 시 스크롤 속도
+      });
+
+      function raf(time) {
+        lenis.raf(time);
+        requestAnimationFrame(raf);
+      }
+      requestAnimationFrame(raf);
+
+      // 3. VanillaTilt (마우스 올렸을 때 살짝 기울어지며 묵직한 패널 느낌 강화)
+      // 패널이 무거운 하드 서피스/우무묵 질감처럼 반응하도록 세팅
+      if (typeof window.refreshTilt === "function") {
+        window.refreshTilt();
+      }
+    </script>
+  </body>
+</html>
