@@ -68,7 +68,7 @@ function buildContact(primaryText) {
     primaryText,
     primaryUrl: "mailto:utau@sapo.dev",
     channels: [
-      { label: "X", value: "@sapo_kr", url: "https://x.com/KokunoTetsu" },
+      { label: "X", value: "@KokunoTetsu", url: "https://x.com/KokunoTetsu" },
       { label: "YouTube", value: "@tarrara163", url: "https://www.youtube.com/@tarrara163" },
       { label: "Email", value: "utau@sapo.dev" },
     ],
