@@ -68,7 +68,7 @@ function buildContact(primaryText) {
     primaryText,
     primaryUrl: "mailto:utau@sapo.dev",
     channels: [
-      { label: "X", value: "@sapo_kr", url: "https://x.com/sapo_kr" },
+      { label: "X", value: "@sapo_kr", url: "https://x.com/KokunoTetsu" },
       { label: "YouTube", value: "@tarrara163", url: "https://www.youtube.com/@tarrara163" },
       { label: "Email", value: "utau@sapo.dev" },
     ],
@@ -97,7 +97,7 @@ function buildFooter(creditsLabel, downloadLabel) {
   return {
     metaText: "2026 Tetsu Kokuno",
     links: [
-      { label: "Contact", url: "https://x.com/sapo_kr" },
+      { label: "Contact", url: "https://x.com/KokunoTetsu" },
       { label: "About", url: "#profile" },
       { label: creditsLabel, url: "#credit" },
       { label: downloadLabel, url: "#credit" },
