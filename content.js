@@ -89,11 +89,11 @@ window.siteContent = {
           "primaryAction": {
             "title": "보이스뱅크 다운로드",
             "label": "드라이브에서 다운로드",
-            "url": "https://drive.google.com/file/d/19RI3QHarB7r3nJvQiaf9S4J1yoTNgJxh/view?usp=sharing"
+            "url": "https://drive.google.com/file/d/15ICVCWsRLs4acea4R8QK-2Dfw0mtnY0j/view?usp=sharing"
           },
           "secondaryAction": {
             "label": "MediaFire에서 다운로드",
-            "url": "https://www.mediafire.com/file/1lxvqm5gtk8iiu2/Glit.zip/file"
+            "url": "https://www.mediafire.com/file/cccnocs051l6grf/Kokuno_Tetsu_JA_VCV.zip/file"
           },
           "notes": [
             "2차 창작 및 상업적 이용 규정은 동봉된 readme.txt를 참고해주세요.",
@@ -277,11 +277,11 @@ window.siteContent = {
           "primaryAction": {
             "title": "Voicebank Download",
             "label": "Download from Drive",
-            "url": "https://drive.google.com/file/d/19RI3QHarB7r3nJvQiaf9S4J1yoTNgJxh/view?usp=sharing"
+            "url": "https://drive.google.com/file/d/15ICVCWsRLs4acea4R8QK-2Dfw0mtnY0j/view?usp=sharing"
           },
           "secondaryAction": {
             "label": "Download from MediaFire",
-            "url": "https://www.mediafire.com/file/1lxvqm5gtk8iiu2/Glit.zip/file"
+            "url": "https://www.mediafire.com/file/cccnocs051l6grf/Kokuno_Tetsu_JA_VCV.zip/file"
           },
           "notes": [
             "Please refer to the included readme.txt for derivative works and commercial use rules.",
@@ -465,11 +465,11 @@ window.siteContent = {
           "primaryAction": {
             "title": "音源ダウンロード",
             "label": "Driveからダウンロード",
-            "url": "https://drive.google.com/file/d/19RI3QHarB7r3nJvQiaf9S4J1yoTNgJxh/view?usp=sharing"
+            "url": "https://drive.google.com/file/d/15ICVCWsRLs4acea4R8QK-2Dfw0mtnY0j/view?usp=sharing"
           },
           "secondaryAction": {
             "label": "MediaFireからダウンロード",
-            "url": "https://www.mediafire.com/file/1lxvqm5gtk8iiu2/Glit.zip/file"
+            "url": "https://www.mediafire.com/file/cccnocs051l6grf/Kokuno_Tetsu_JA_VCV.zip/file"
           },
           "notes": [
             "二次創作や商用利用に関する規定は、同梱のreadme.txtをご確認ください。",
